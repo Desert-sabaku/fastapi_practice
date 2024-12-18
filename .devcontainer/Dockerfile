@@ -28,8 +28,6 @@ RUN adduser \
     --uid "${UID}" \
     appuser \
     && chown -R appuser:appuser /app \
-    # && groupadd -f docker \
-    # && usermod -aG docker appuser \
     # install the system dependencies
     && apt update \
     && apt install -y --no-install-recommends \

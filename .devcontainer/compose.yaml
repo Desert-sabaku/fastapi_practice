@@ -16,7 +16,6 @@ services:
             - 8000:8000
         volumes:
             - ./..:/app # bind mount the project root directory to the container
-            # - /var/run/docker.sock:/var/run/docker.sock # bind mount the Docker socket
         command:
             [
                 "uvicorn",
@@ -27,10 +26,8 @@ services:
                 "8000",
                 "--reload",
             ]
-        extra_hosts:
-            - "host.docker.internal:host-gateway"
-        environment:
-            - HOST_IP=host.docker.internal
+          environment:
+            - PORT: 8000
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your applicati1on. The `db-data` volume persists the

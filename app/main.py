@@ -16,4 +16,4 @@ def read_item(item_id: int, q: Optional[str] = None):
 
 @app.get("/users/{user_id}")
 def read_user(user_id: int, q: Optional[str] = None):
-    return {"user_id": user_id, "q": f"MSG {q}"}
+    return {"user_id": user_id, "q": f"msg; {q}"}
