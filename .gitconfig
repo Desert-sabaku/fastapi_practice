@@ -1,0 +1,13 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[user]
+	name = Matsumoto Eugene
+	email = yuu.mat.930@gmail.com
+[safe]
+	directory = %(prefix)///wsl.localhost/Ubuntu-24.04/home/desert/procon/rubb
+	directory = /app
+[credential]
+	helper = "!f() { /app/.vscode-server/bin/138f619c86f1199955d53b4166bef66ef252935c/node /tmp/vscode-remote-containers-206a9b7f-a9ca-4ad3-8ece-dee346e6b4e3.js git-credential-helper $*; }; f"
