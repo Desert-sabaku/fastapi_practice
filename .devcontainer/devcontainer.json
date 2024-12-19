@@ -33,18 +33,16 @@
                 "charliermarsh.ruff",
                 "kevinrose.vsc-python-indent",
                 "njpwerner.autodocstring",
-
                 // IntelliCode extensions
                 "visualstudioexptteam.vscodeintellicode",
                 "visualstudioexptteam.intellicode-api-usage-examples",
-
                 // GitHub extensions
                 "github.copilot",
                 "github.copilot-chat",
                 "github.vscode-pull-request-github",
-
                 // Other extensions
-                "oderwat.indent-rainbow"
+                "oderwat.indent-rainbow",
+                "streetsidesoftware.code-spell-checker"
             ]
         }
     }
