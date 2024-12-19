@@ -2,3 +2,5 @@
 .dotnet/
 .gnupg/
 .vscode-server/
+.bash_history
+.venv/
