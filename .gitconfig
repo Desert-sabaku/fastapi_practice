@@ -10,4 +10,4 @@
 	directory = %(prefix)///wsl.localhost/Ubuntu-24.04/home/desert/procon/rubb
 	directory = /app
 [credential]
-	helper = "!f() { /app/.vscode-server/bin/138f619c86f1199955d53b4166bef66ef252935c/node /tmp/vscode-remote-containers-0144d5ab-cf2a-453d-87f8-4df96ad3a1bb.js git-credential-helper $*; }; f"
+	helper = "!f() { /app/.vscode-server/bin/138f619c86f1199955d53b4166bef66ef252935c/node /tmp/vscode-remote-containers-cdf873dd-6d75-4856-a118-79ceda227e0e.js git-credential-helper $*; }; f"

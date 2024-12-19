@@ -1,6 +1,14 @@
 {
     "cSpell.words": [
+        "adduser",
+        "appuser",
         "devcontainers",
+        "gecos",
+        "myapp",
+        "myregistry",
+        "PYTHONDONTWRITEBYTECODE",
+        "PYTHONUNBUFFERED",
+        "uvicorn",
         "venv"
     ]
 }
