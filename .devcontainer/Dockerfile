@@ -35,9 +35,10 @@ RUN adduser \
     --no-create-home \
     --uid "${UID}" \
     appuser \
-    && chown -R appuser:appuser /app \
-    # install the system dependencies
-    && apt update \
+    && chown -R appuser:appuser /app
+
+# install the system dependencies
+RUN apt update \
     && apt install -y --no-install-recommends \
         git \
     && apt clean \

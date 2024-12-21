@@ -12,8 +12,8 @@ services:
         build:
             context: ..
             dockerfile: .devcontainer/Dockerfile
-        # ports:
-        #     - 8000:8000
+        ports:
+            - 8000:8000
         volumes:
             - ./..:/app # bind mount the project root directory to the container
         # command:
