@@ -11,8 +11,9 @@
         "uvicorn",
         "venv"
     ],
+    "files.autoSave": "afterDelay",
     "python.analysis.typeCheckingMode": "basic",
-    "python.analysis.diagnosticMode": "workspace",
+    "python.analysis.diagnosticMode": "openFilesOnly",
     "python.analysis.autoFormatStrings": true,
     "python.analysis.completeFunctionParens": true,
     "python.analysis.displayEnglishDiagnostics": true,
