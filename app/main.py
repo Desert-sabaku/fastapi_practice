@@ -7,7 +7,7 @@ app = FastAPI()
 grocery_list: dict[int, ItemPayload] = {}
 
 
-@app.post("/items/{item_name}/{quantity}")
+@app.post("/items/{name}/{quantity}")
 def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
     if quantity <= 0:
         raise HTTPException(
@@ -15,8 +15,11 @@ def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
             detail="Quantity must be greater than 0"
         )
 
+    # if item already exists, we'll just add the quantity.
+    # get all item names
     items_ids = {
-        item.name: item.id if item.id is not None else 0 for item in grocery_list.values()
+        item.name: item.id if item.id is not None else 0
+        for item in grocery_list.values()
     }
 
     if name in items_ids.keys():
@@ -35,3 +38,39 @@ def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
         )
 
     return {"item": grocery_list[item_id]}
+
+
+@app.get("/items")
+def list_items(id: int) -> dict[str, ItemPayload]:
+    return {"items": grocery_list[id]}
+
+
+@app.delete("/items/{id}")
+def delete_item(id: int):
+    if id not in grocery_list:
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found"
+        )
+
+    del grocery_list[id]
+    return {"message": "Item deleted successfully"}
+
+
+@app.delete("/items/{id}/{quantity}")
+def remove_quantity(id: int, quantity: int):
+    if id not in grocery_list:
+        raise HTTPException(
+            status_code=404,
+            detail="Item not found"
+        )
+
+    if grocery_list[id].quantity <= quantity:
+        raise HTTPException(
+            status_code=400,
+            detail="Quantity to remove is greater than the available quantity"
+        )
+    else:
+        grocery_list[id].quantity -= quantity
+
+    return {"message": "Quantity removed successfully"}
