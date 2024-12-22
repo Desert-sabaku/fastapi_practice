@@ -4,4 +4,8 @@
 [init]
 	defaultBranch = main
 [credential]
+<<<<<<< Updated upstream
 	helper = "!f() { /app/.vscode-server/bin/fabdb6a30b49f79a7aba0f2ad9df9b399473380f/node /tmp/vscode-remote-containers-7dba6348-2723-40ee-b3db-9692ca504a6c.js git-credential-helper $*; }; f"
+=======
+	helper = "!f() { /app/.vscode-server/bin/fabdb6a30b49f79a7aba0f2ad9df9b399473380f/node /tmp/vscode-remote-containers-d3a49ff5-67a5-498e-a8dd-25b9976197f5.js git-credential-helper $*; }; f"
+>>>>>>> Stashed changes

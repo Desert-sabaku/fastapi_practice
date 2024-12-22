@@ -12,20 +12,13 @@ services:
         build:
             context: ..
             dockerfile: .devcontainer/Dockerfile
+<<<<<<< Updated upstream
         # ports:
         #     - 8000:8000
+=======
+>>>>>>> Stashed changes
         volumes:
             - ./..:/app # bind mount the project root directory to the container
-        # command:
-        #     [
-        #         "uvicorn",
-        #         "app.main:app",
-        #         "--host",
-        #         "0.0.0.0",
-        #         "--port",
-        #         "8000",
-        #         "--reload",
-        #     ]
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the

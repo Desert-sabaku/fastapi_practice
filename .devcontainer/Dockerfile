@@ -49,10 +49,3 @@ USER appuser
 
 # Copy the source code into the container.
 COPY --chown=appuser:appuser . .
-
-# Expose the port that the application listens on.
-EXPOSE 8000
-
-# Run the application. compose.yaml will override this command.
-# The commands described here are for production environments.
-CMD ["uvicorn", "app.main:app"]
