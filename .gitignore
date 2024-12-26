@@ -4,3 +4,4 @@
 .vscode-server/
 .bash_history
 .venv/
+.ssh/
