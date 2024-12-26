@@ -17,7 +17,7 @@ services:
             - ..:/app
         # keep the container running after startup.
         # ref: https://genzouw.com/entry/2023/03/24/083011/3332/
-        command: sleep infinity
+        command: ["sleep", "infinity"]
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
 # start the database before your application. The `db-data` volume persists the
