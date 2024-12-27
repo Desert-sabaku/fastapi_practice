@@ -6,7 +6,10 @@
     "service": "server",
     "workspaceFolder": "/app",
     // Features to add to the dev container. More info: https://containers.dev/features.
-    // "features": {},
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/itsmechlark/features/redis-server:1": {}
+    },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [8000],
     // Uncomment the next line to run commands after the container is created.
@@ -14,9 +17,6 @@
     // Configure tool-specific properties.
     "customizations": {
         "vscode": {
-            "settings": {
-                "python.defaultInterpreterPath": "../.venv/Scripts/python.exe"
-            },
             "extensions": [
                 // Python extensions
                 "ms-python.python",
