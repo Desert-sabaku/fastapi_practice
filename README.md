@@ -1,6 +1,6 @@
-# LEARNING MEMO
+# メモ
 
-## COMPUTER NETWORK
+## Computer network
 
 IPアドレスが住所を表すなら、ポート番号は部屋番号を表すようなもの。
 
@@ -16,10 +16,10 @@ IP: `0.0.0.0`は、すべてのNetwork Interfaceの接続を受け入れる。�
 
 同じLANにあるコンピューターからは`http://[ワイのPCのローカルIPアドレス]:8000`でいけた。[参考](https://x.com/DESERT__SABAKU/status/1868994677506269395)
 
-### IP ADDRESS
+### IP address
 `IPアドレス`は、ネットワーク上の機器に一意に割り当てられた番号。通信先を指定するために用いる。
 
-### PORT NUMBER
+### Port number
 `ポート番号`とは、データの送受信に使われる「ポート」に割り当てられた番号で、サービスや通信プロトコルを識別するために用いる。
 
 ## BIND
@@ -28,7 +28,7 @@ https://docs.docker.com/engine/storage/bind-mounts/
 
 https://docs.google.com/document/d/1PoQYikfBwKhFM2DLcM5kuNlNOvn-eCSB5Sx-Ay-oy9Q/edit?usp=sharing
 
-## WORDS
+## 語彙
 
 `seamless`: "seem"は縫い目、継ぎ目のこと。複数のアプリが組み合わさって1つの用役を形成するとき、その違いを考えずなくてよい、継ぎ目ない円滑さを表す。
 
