@@ -13,7 +13,7 @@
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [8000],
     // Uncomment the next line to run commands after the container is created.
-    // "postCreateCommand": "",
+    "postCreateCommand": "redis-server",
     // Configure tool-specific properties.
     "customizations": {
         "vscode": {
@@ -34,7 +34,9 @@
                 "github.vscode-pull-request-github",
                 // Other extensions
                 "oderwat.indent-rainbow",
-                "streetsidesoftware.code-spell-checker"
+                "streetsidesoftware.code-spell-checker",
+                "aaron-bond.better-comments",
+                "usernamehw.errorlens",
             ]
         }
     }
