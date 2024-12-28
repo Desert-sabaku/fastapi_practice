@@ -5,47 +5,70 @@ from app.models.grocery import ItemPayload
 
 app = FastAPI()
 
-redis_client = redis.StrictRedis(host="0.0.0.0", port=6379, db=0, decode_responses=True)
+redis_client = redis.StrictRedis(
+    host="0.0.0.0", port=6379, db=0, decode_responses=True
+)
 
+@app.post("/items/{name}/{quantity}")
+def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
+    """Route to add an item to the inventory.
 
-# Route to add an item
-@app.post("/items/{item_name}/{quantity}")
-def add_item(item_name: str, quantity: int) -> dict[str, ItemPayload]:
+    Args:
+        name (str): item name
+        quantity (int): item quantity
+
+    Raises:
+        HTTPException: If quantity is less than or equal to 0
+
+    Returns:
+        dict[str, ItemPayload]: item payload
+    """
     if quantity <= 0:
-        raise HTTPException(status_code=400, detail="Quantity must be greater than 0.")
+        raise HTTPException(
+            status_code=400, detail="Quantity must be greater than 0.")
 
     # Check if item already exists
-    item_id_str = redis_client.hget("item_name_to_id", item_name)
+    item_id_str = redis_client.hget("item_name_to_id", name)
 
     if item_id_str is not None:
-        item_id = int(item_id_str)
-        redis_client.hincrby(f"item_id:{item_id}", "quantity", quantity)
+        id = int(item_id_str)
+        redis_client.hincrby(f"item_id:{id}", "quantity", quantity)
     else:
         # Generate an ID for the item
-        item_id: int = redis_client.incr("item_ids")
+        id = redis_client.incr("item_ids")
         redis_client.hset(
-            f"item_id:{item_id}",
+            f"item_id:{id}",
             mapping={
-                "item_id": item_id,
-                "item_name": item_name,
+                "item_id": id,
+                "item_name": name,
                 "quantity": quantity,
             },
         )
         # Create a set so we can search by name too
-        redis_client.hset("item_name_to_id", item_name, item_id)
+        redis_client.hset("item_name_to_id", name, id)
 
     return {
-        "item": ItemPayload(id=item_id, name=item_name, quantity=quantity)
+        "item": ItemPayload(id=id, name=name, quantity=quantity)
     }
 
 
-# Route to list a specific item by ID but using Redis
-@app.get("/items/{item_id}")
-def list_item(item_id: int) -> dict[str, dict[str, str]]:
-    if not redis_client.hexists(f"item_id:{item_id}", "item_id"):
+@app.get("/items/{id}")
+def list_item(id: int) -> dict[str, dict[str, str]]:
+    """Route to list a specific item by ID but using Redis.
+
+    Args:
+        id (int): item ID
+
+    Raises:
+        HTTPException: If item not found
+
+    Returns:
+        dict[str, dict[str, str]]: item payload
+    """
+    if not redis_client.hexists(f"item_id:{id}", "item_id"):
         raise HTTPException(status_code=404, detail="Item not found.")
     else:
-        return {"item": redis_client.hgetall(f"item_id:{item_id}")}
+        return {"item": redis_client.hgetall(f"item_id:{id}")}
 
 
 @app.get("/items")
@@ -53,60 +76,86 @@ def list_items() -> dict[str, list[ItemPayload]]:
     items: list[ItemPayload] = []
     stored_items: dict[str, str] = redis_client.hgetall("item_name_to_id")
 
-    for name, id_str in stored_items.items():
-        item_id: int = int(id_str)
+    for _, id_str in stored_items.items():
+        id = int(id_str)
 
-        item_name_str: str | None = redis_client.hget(f"item_id:{item_id}", "item_name")
-        if item_name_str is not None:
-            item_name: str = item_name_str
+        name = redis_client.hget(f"item_id:{id}", "item_name")
+        if name is not None:
+            name = name
         else:
             continue  # skip this item if it has no name
 
-        item_quantity_str: str | None = redis_client.hget(
-            f"item_id:{item_id}", "quantity"
+        quantity = redis_client.hget(
+            f"item_id:{id}", "quantity"
         )
-        if item_quantity_str is not None:
-            item_quantity: int = int(item_quantity_str)
+        if quantity is not None:
+            quantity = int(quantity)
         else:
-            item_quantity = 0
+            quantity = 0
 
         items.append(
-            ItemPayload(id=item_id, name=item_name, quantity=item_quantity)
+            ItemPayload(id=id, name=name,
+                        quantity=quantity)
         )
 
     return {"items": items}
 
 
-# Route to delete a specific item by ID but using Redis
-@app.delete("/items/{item_id}")
-def delete_item(item_id: int) -> dict[str, str]:
-    if not redis_client.hexists(f"item_id:{item_id}", "item_id"):
+@app.delete("/items/{id}")
+def delete_item(id: int) -> dict[str, str]:
+    """Route to delete a specific item by ID but using Redis.
+
+    Args:
+        id (int): item ID
+
+    Raises:
+        HTTPException: If item not found
+
+    Returns:
+        dict[str, str]: result message
+    """
+    if not redis_client.hexists(f"item_id:{id}", "item_id"):
         raise HTTPException(status_code=404, detail="Item not found.")
     else:
-        item_name: str | None = redis_client.hget(f"item_id:{item_id}", "item_name")
-        redis_client.hdel("item_name_to_id", f"{item_name}")
-        redis_client.delete(f"item_id:{item_id}")
+        name = redis_client.hget(
+            f"item_id:{id}", "item_name")
+        redis_client.hdel("item_name_to_id", f"{name}")
+        redis_client.delete(f"item_id:{id}")
         return {"result": "Item deleted."}
 
 
-# Route to remove some quantity of a specific item by ID but using Redis
-@app.delete("/items/{item_id}/{quantity}")
-def remove_quantity(item_id: int, quantity: int) -> dict[str, str]:
-    if not redis_client.hexists(f"item_id:{item_id}", "item_id"):
+@app.delete("/items/{id}/{quantity}")
+def remove_quantity(id: int, quantity: int) -> dict[str, str]:
+    """Route to remove some quantity of a specific item by ID but using Redis.
+
+    Args:
+        id (int): item ID
+        quantity (int): quantity to remove
+
+    Raises:
+        HTTPException: If item not found
+
+    Returns:
+        dict[str, str]: result message
+    """
+    if not redis_client.hexists(f"item_id:{id}", "item_id"):
         raise HTTPException(status_code=404, detail="Item not found.")
 
-    item_quantity: str | None = redis_client.hget(f"item_id:{item_id}", "quantity")
+    item_quantity = redis_client.hget(
+        f"item_id:{id}", "quantity")
 
     # if quantity to be removed is higher or equal to item's quantity, delete the item
     if item_quantity is None:
-        existing_quantity: int = 0
+        existing_quantity = 0
     else:
-        existing_quantity: int = int(item_quantity)
+        existing_quantity = int(item_quantity)
+
     if existing_quantity <= quantity:
-        item_name: str | None = redis_client.hget(f"item_id:{item_id}", "item_name")
-        redis_client.hdel("item_name_to_id", f"{item_name}")
-        redis_client.delete(f"item_id:{item_id}")
+        name = redis_client.hget(
+            f"item_id:{id}", "item_name")
+        redis_client.hdel("item_name_to_id", f"{name}")
+        redis_client.delete(f"item_id:{id}")
         return {"result": "Item deleted."}
     else:
-        redis_client.hincrby(f"item_id:{item_id}", "quantity", -quantity)
+        redis_client.hincrby(f"item_id:{id}", "quantity", -quantity)
         return {"result": f"{quantity} items removed."}
