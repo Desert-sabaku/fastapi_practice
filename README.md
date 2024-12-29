@@ -30,6 +30,6 @@ https://docs.google.com/document/d/1PoQYikfBwKhFM2DLcM5kuNlNOvn-eCSB5Sx-Ay-oy9Q/
 
 ## 語彙
 
-`seamless`: "seem"は縫い目、継ぎ目のこと。複数のアプリが組み合わさって1つの用役を形成するとき、その違いを考えずなくてよい、継ぎ目ない円滑さを表す。
+`seamless`: "seam"は縫い目、継ぎ目のこと。複数のアプリが組み合わさって1つの用役を形成するとき、その違いを考えずなくてよい、継ぎ目ない円滑さを表す。
 
 `heuristic`: 経験則、厳密な理論に基づかないもののある程度正しいと認められる概算。
