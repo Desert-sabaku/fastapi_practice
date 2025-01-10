@@ -22,9 +22,9 @@ ARG UID=10001
 RUN adduser \
     --disabled-password \
     --gecos "" \
+    --no-create-home \
     --home "/app" \
     --shell "/usr/bin/bash" \
-    --no-create-home \
     --uid "${UID}" \
     appuser \
     && chown -R appuser:appuser /app
