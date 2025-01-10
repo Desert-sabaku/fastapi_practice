@@ -6,3 +6,4 @@
 .venv/
 .ssh/
 .dbclient/
+app/__pycache__/

@@ -5,9 +5,8 @@ from app.models.grocery import ItemPayload
 
 app = FastAPI()
 
-redis_client = redis.StrictRedis(
-    host="0.0.0.0", port=6379, db=0, decode_responses=True
-)
+redis_client = redis.StrictRedis(host="0.0.0.0", port=6379, db=0, decode_responses=True)
+
 
 @app.post("/items/{name}/{quantity}")
 def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
@@ -24,8 +23,7 @@ def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
         dict[str, ItemPayload]: item payload
     """
     if quantity <= 0:
-        raise HTTPException(
-            status_code=400, detail="Quantity must be greater than 0.")
+        raise HTTPException(status_code=400, detail="Quantity must be greater than 0.")
 
     # Check if item already exists
     item_id_str = redis_client.hget("item_name_to_id", name)
@@ -47,9 +45,7 @@ def add_item(name: str, quantity: int) -> dict[str, ItemPayload]:
         # Create a set so we can search by name too
         redis_client.hset("item_name_to_id", name, id)
 
-    return {
-        "item": ItemPayload(id=id, name=name, quantity=quantity)
-    }
+    return {"item": ItemPayload(id=id, name=name, quantity=quantity)}
 
 
 @app.get("/items/{id}")
@@ -73,6 +69,11 @@ def list_item(id: int) -> dict[str, dict[str, str]]:
 
 @app.get("/items")
 def list_items() -> dict[str, list[ItemPayload]]:
+    """Route to list all items but using Redis.
+
+    Returns:
+        dict[str, list[ItemPayload]]: list of items
+    """
     items: list[ItemPayload] = []
     stored_items: dict[str, str] = redis_client.hgetall("item_name_to_id")
 
@@ -85,18 +86,13 @@ def list_items() -> dict[str, list[ItemPayload]]:
         else:
             continue  # skip this item if it has no name
 
-        quantity = redis_client.hget(
-            f"item_id:{id}", "quantity"
-        )
+        quantity = redis_client.hget(f"item_id:{id}", "quantity")
         if quantity is not None:
             quantity = int(quantity)
         else:
             quantity = 0
 
-        items.append(
-            ItemPayload(id=id, name=name,
-                        quantity=quantity)
-        )
+        items.append(ItemPayload(id=id, name=name, quantity=quantity))
 
     return {"items": items}
 
@@ -117,8 +113,7 @@ def delete_item(id: int) -> dict[str, str]:
     if not redis_client.hexists(f"item_id:{id}", "item_id"):
         raise HTTPException(status_code=404, detail="Item not found.")
     else:
-        name = redis_client.hget(
-            f"item_id:{id}", "item_name")
+        name = redis_client.hget(f"item_id:{id}", "item_name")
         redis_client.hdel("item_name_to_id", f"{name}")
         redis_client.delete(f"item_id:{id}")
         return {"result": "Item deleted."}
@@ -141,8 +136,7 @@ def remove_quantity(id: int, quantity: int) -> dict[str, str]:
     if not redis_client.hexists(f"item_id:{id}", "item_id"):
         raise HTTPException(status_code=404, detail="Item not found.")
 
-    item_quantity = redis_client.hget(
-        f"item_id:{id}", "quantity")
+    item_quantity = redis_client.hget(f"item_id:{id}", "quantity")
 
     # if quantity to be removed is higher or equal to item's quantity, delete the item
     if item_quantity is None:
@@ -151,8 +145,7 @@ def remove_quantity(id: int, quantity: int) -> dict[str, str]:
         existing_quantity = int(item_quantity)
 
     if existing_quantity <= quantity:
-        name = redis_client.hget(
-            f"item_id:{id}", "item_name")
+        name = redis_client.hget(f"item_id:{id}", "item_name")
         redis_client.hdel("item_name_to_id", f"{name}")
         redis_client.delete(f"item_id:{id}")
         return {"result": "Item deleted."}
